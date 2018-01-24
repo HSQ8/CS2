@@ -1,0 +1,9 @@
+README
+BFS is faster when the branches arent very deep and there are many branches
+
+DFS is faster when the branches don't branch out very often and gets very deep
+
+Queue can be used to process requests on a server from different computers. whichever computer sent the connection request first will be able to receive response first from a server.
+
+Stacks can be used to revserse a string. you insert, and then you pop from the back, which would get you the last element first, so on and so
+forth.

@@ -1,0 +1,15 @@
+the errors were
+
+memory leak:
+tree is not being properly deleted, so I created a delete method
+(i was considering writing a proper destructor, but since the
+original main function declares the bst on the stack, and not on the heap, I couldn't have called delete to invoke a ~destructor)
+afterwards i confirmed in valgrind that there are no memory
+leaks
+
+segfault:
+when adding the first node, we don't check whether
+it has been initialized, its a null ptr that we try to dereference
+
+there may be other errors that I don't remember fixing when i fixed 
+it since I'm writing this readme 4 days after.

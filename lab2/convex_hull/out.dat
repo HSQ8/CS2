@@ -1,0 +1,132 @@
+==1299== Memcheck, a memory error detector
+==1299== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==1299== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==1299== Command: ./linked_list
+==1299== Parent PID: 71
+==1299== 
+--1299-- 
+--1299-- Valgrind options:
+--1299--    --leak-check=full
+--1299--    --show-leak-kinds=all
+--1299--    -v
+--1299--    --log-file=out.dat
+--1299-- Contents of /proc/version:
+--1299--   Linux version 4.4.0-43-Microsoft (Microsoft@Microsoft.com) (gcc version 5.4.0 (GCC) ) #1-Microsoft Wed Dec 31 14:42:53 PST 2014
+--1299-- 
+--1299-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-avx-avx2-bmi
+--1299-- Page sizes: currently 4096, max supported 4096
+--1299-- Valgrind library directory: /usr/lib/valgrind
+--1299-- Reading syms from /mnt/c/Users/hongs/OneDrive - California Institute of Technology/CS2/lab2/convex_hull/linked_list
+--1299-- Reading syms from /lib/x86_64-linux-gnu/ld-2.23.so
+--1299--   Considering /lib/x86_64-linux-gnu/ld-2.23.so ..
+--1299--   .. CRC mismatch (computed 9bc477cd wanted 3da2f12a)
+--1299--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.23.so ..
+--1299--   .. CRC is valid
+--1299-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--1299--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--1299--   .. CRC mismatch (computed eea41ea9 wanted 2009db78)
+--1299--    object doesn't have a symbol table
+--1299--    object doesn't have a dynamic symbol table
+--1299-- Scheduler: using generic scheduler lock implementation.
+--1299-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==1299== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-1299-by-hqin-on-???
+==1299== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-1299-by-hqin-on-???
+==1299== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-1299-by-hqin-on-???
+==1299== 
+==1299== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==1299== don't want to do, unless you know exactly what you're doing,
+==1299== or are doing some strange experiment):
+==1299==   /usr/lib/valgrind/../../bin/vgdb --pid=1299 ...command...
+==1299== 
+==1299== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==1299==   /path/to/gdb ./linked_list
+==1299== and then give GDB the following command
+==1299==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=1299
+==1299== --pid is optional if only one valgrind process is running
+==1299== 
+--1299-- REDIR: 0x401cf90 (ld-linux-x86-64.so.2:strlen) redirected to 0x3809e181 (???)
+--1299-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--1299--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--1299--   .. CRC mismatch (computed 2567ccf6 wanted 49420590)
+--1299--    object doesn't have a symbol table
+--1299-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--1299--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--1299--   .. CRC mismatch (computed 0e27c9a8 wanted ac585421)
+--1299--    object doesn't have a symbol table
+==1299== WARNING: new redirection conflicts with existing -- ignoring it
+--1299--     old: 0x0401cf90 (strlen              ) R-> (0000.0) 0x3809e181 ???
+--1299--     new: 0x0401cf90 (strlen              ) R-> (2007.0) 0x04c31020 strlen
+--1299-- REDIR: 0x401b8e0 (ld-linux-x86-64.so.2:index) redirected to 0x4c30bc0 (index)
+--1299-- REDIR: 0x401bb00 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c320d0 (strcmp)
+--1299-- REDIR: 0x401dcf0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c35270 (mempcpy)
+--1299-- Reading syms from /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+--1299--   Considering /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 ..
+--1299--   .. CRC mismatch (computed 2f26e592 wanted a874dadb)
+--1299--    object doesn't have a symbol table
+--1299-- Reading syms from /lib/x86_64-linux-gnu/libgcc_s.so.1
+--1299--   Considering /lib/x86_64-linux-gnu/libgcc_s.so.1 ..
+--1299--   .. CRC mismatch (computed b9a68419 wanted 29d51b00)
+--1299--    object doesn't have a symbol table
+--1299-- Reading syms from /lib/x86_64-linux-gnu/libc-2.23.so
+--1299--   Considering /lib/x86_64-linux-gnu/libc-2.23.so ..
+--1299--   .. CRC mismatch (computed b2979fac wanted 1affc958)
+--1299--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.23.so ..
+--1299--   .. CRC is valid
+--1299-- Reading syms from /lib/x86_64-linux-gnu/libm-2.23.so
+--1299--   Considering /lib/x86_64-linux-gnu/libm-2.23.so ..
+--1299--   .. CRC mismatch (computed 8bd88005 wanted 32b88176)
+--1299--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libm-2.23.so ..
+--1299--   .. CRC is valid
+--1299-- REDIR: 0x5461a00 (libc.so.6:strcasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x545d280 (libc.so.6:strcspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x5463cf0 (libc.so.6:strncasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x545f6f0 (libc.so.6:strpbrk) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x545fa80 (libc.so.6:strspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x546114b (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x545f400 (libc.so.6:rindex) redirected to 0x4c308a0 (rindex)
+--1299-- REDIR: 0x5456130 (libc.so.6:malloc) redirected to 0x4c2db20 (malloc)
+--1299-- REDIR: 0x545d720 (libc.so.6:strlen) redirected to 0x4c30f60 (strlen)
+--1299-- REDIR: 0x5460bf0 (libc.so.6:__GI_memcmp) redirected to 0x4c33b90 (__GI_memcmp)
+--1299-- REDIR: 0x545bcd0 (libc.so.6:strcmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x5471570 (libc.so.6:__strcmp_sse2_unaligned) redirected to 0x4c31f90 (strcmp)
+--1299-- REDIR: 0x4ec7e60 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4c2e080 (operator new(unsigned long))
+--1299-- REDIR: 0x5460bb0 (libc.so.6:bcmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--1299-- REDIR: 0x55403f0 (libc.so.6:__memcmp_sse4_1) redirected to 0x4c33cd0 (__memcmp_sse4_1)
+--1299-- REDIR: 0x54613b0 (libc.so.6:__GI_mempcpy) redirected to 0x4c34fa0 (__GI_mempcpy)
+--1299-- REDIR: 0x4ec5f10 (libstdc++.so.6:operator delete(void*)) redirected to 0x4c2f1e0 (operator delete(void*))
+--1299-- REDIR: 0x54564f0 (libc.so.6:free) redirected to 0x4c2ed80 (free)
+==1299== 
+==1299== HEAP SUMMARY:
+==1299==     in use at exit: 72,848 bytes in 10 blocks
+==1299==   total heap usage: 12 allocs, 2 frees, 76,960 bytes allocated
+==1299== 
+==1299== Searching for pointers to 10 not-freed blocks
+==1299== Checked 114,456 bytes
+==1299== 
+==1299== 128 bytes in 8 blocks are indirectly lost in loss record 1 of 3
+==1299==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1299==    by 0x400AAD: List::insert(int) (linked_list.cpp:87)
+==1299==    by 0x400BBC: main (linked_list.cpp:123)
+==1299== 
+==1299== 144 (16 direct, 128 indirect) bytes in 1 blocks are definitely lost in loss record 2 of 3
+==1299==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1299==    by 0x400AAD: List::insert(int) (linked_list.cpp:87)
+==1299==    by 0x400BBC: main (linked_list.cpp:123)
+==1299== 
+==1299== 72,704 bytes in 1 blocks are still reachable in loss record 3 of 3
+==1299==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1299==    by 0x4EC3EFF: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==1299==    by 0x40106B9: call_init.part.0 (dl-init.c:72)
+==1299==    by 0x40107CA: call_init (dl-init.c:30)
+==1299==    by 0x40107CA: _dl_init (dl-init.c:120)
+==1299==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==1299== 
+==1299== LEAK SUMMARY:
+==1299==    definitely lost: 16 bytes in 1 blocks
+==1299==    indirectly lost: 128 bytes in 8 blocks
+==1299==      possibly lost: 0 bytes in 0 blocks
+==1299==    still reachable: 72,704 bytes in 1 blocks
+==1299==         suppressed: 0 bytes in 0 blocks
+==1299== 
+==1299== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==1299== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

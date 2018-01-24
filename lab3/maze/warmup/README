@@ -1,0 +1,20 @@
+README
+This mine.py module include has some functions
+that would recursively update a mineswepper board
+given a board in a 2x2 array and a location given by 
+a 1x2 array where the first term is the x and the second 
+term is the y.
+
+Usage:
+one can simply run the file in python3 to determine whether the 
+included test cases pass the test given on the webpage, 
+if they do then a statement will print.
+if one wishes to use this module, the way to interface with the
+board update method is by calling 
+
+mine.adjustboard(board, clicklocation):
+
+where board is a 2x2 matrix representing the board 
+and click location is a 1x2 matrix representing an 
+x,y coordinate pair of the location the user intends to 
+click*(e.g.  [1,2] ). 
