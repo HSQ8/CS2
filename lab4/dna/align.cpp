@@ -25,7 +25,7 @@ struct align_result {
 
     align_result(int s, string i) {
         this->score = s;
-        this->inst = i;
+        this->inst = i;                              
     }
     align_result() {
         this->score = 0;
@@ -35,8 +35,26 @@ struct align_result {
 
 // memo_type will allow us to hash the string input to align
 // with its output for memoization
-typedef unordered_map<string, align_result> memo_type;
+typedef unordered_map<string, align_result> memo_type;                  
 
+int computeScore(string s, string t){
+    int score = 0;
+    int length = s.length();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    int longerlength = t.length();
+    if(s.length() > t.length()){
+        length = t.length();
+        longerlength = s.length();
+    }
+    for(int i = 0; i < length; ++i){
+        if(s.substr(i,1).compare(t.substr(i,1)) == 0){
+            score += MATCHING;
+        }else if (s.substr(i,1) != "-" && t.substr(i,1) != "-"){
+            score += MISMATCH;
+        }
+    }
+    score += GAP_SCORE*(longerlength - length);
+    return score;
+}
 /**
  * @brief Function takes two strings, s and t, and produces an align_result
  * of the highest alignment score and its corresponding instruction str.
@@ -51,12 +69,49 @@ align_result align(string s, string t, memo_type &memo) {
     /*
       TODO: calculate the highest score for an alignment of s and t
       - Base cases: s or t is empty
-      - Recursive calls
+      - Recursive calls                                                                        
      */
+    if(s.length() == 0 &&  t.length() != 0){
+        return align_result(computeScore(s,t), std::string((t.length() - s.length()), 't'));
+    }else if(s.length() != 0 &&  t.length() == 0){
+        return align_result(computeScore(s,t), std::string((s.length() - t.length()),'s'));
+    } else if(s.length() == 0 &&  t.length() == 0){
+        return align_result(computeScore(s,t),"");
+    }
+    align_result answer;
+//gap on S
+    align_result gapOnSResult = align_result(GAP_SCORE, "t");
+    align_result gaponSRecursive = align(s,t.substr(1),memo);
+    gapOnSResult.score += gaponSRecursive.score;
+    gapOnSResult.inst += gaponSRecursive.inst;
+    answer = gapOnSResult;
+//gap on T
+    align_result gapOnTResult = align_result(GAP_SCORE, "s");
+    align_result gaponTRecursive = align(t,s.substr(1), memo);
+    gapOnTResult.score += gaponTRecursive.score;
+    gapOnTResult.inst += gaponTRecursive.inst;
+    if(answer.score < gapOnTResult.score){
+        answer = gapOnTResult;
+    }
+//gap on neither
+    int tempscore = computeScore(s.substr(0,1), t.substr(0,1));
+    string tempinst = "s";
+    if(tempscore == MISMATCH){
+        tempinst = "*";
+    }else if (tempscore == MATCHING){
+        tempinst = "|";
+    }
+    align_result gapNeitherResult = align_result(tempscore, tempinst);
+    align_result gapNeitherRecursive = align(s.substr(1),t.substr(1),memo);
+    gapNeitherResult.score += gapNeitherRecursive.score;
+    gapNeitherResult.inst += gapNeitherRecursive.inst;
+    if(answer.score < gapNeitherResult.score){
+        answer = gapNeitherResult;
+    }
 
     /* Before you return your calculated  align_result object,
        memoize it like so:*/
-    align_result answer;
+    
     memo[key] = answer;
     return answer;
 }

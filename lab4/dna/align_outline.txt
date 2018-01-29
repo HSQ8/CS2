@@ -1,0 +1,38 @@
+align_outline:
+
+-5 - gap
+-1 - mismatch
+2 - align
+
+
+string alignment_function(string str1, string str2){
+    check if align result object is already in memory, if yes
+    return this stored result
+
+//handle base cases
+
+    if( str1.length == 0){
+    return alignresult object without any instructions and a score of the number of gaps required to fill the difference
+    }
+    if( str2.length == 0){
+    return alignresult object without any instructions and a score of the number of gaps required to fill the difference
+    }
+    if( str1.length == 0 and str2.length = 0){
+    return alignresult object without any instructions and a score of zero
+    }
+//do recursive cases
+    compute gap, str2 front and store to alignment object
+    recurse on str1, str2.substr(1)
+    update align_result object for gap_str1
+    
+    compute gap, str1 front and store to alignment object
+    recurse on str2, str1.substr(1)
+    update align_result object for gap_str2
+
+    compute str1 front, str2 front and store to alignment object
+    recurse on str1.substr(1), str2.substr(1)
+    update align_result object for gap_onNeither
+
+    memorize alignresult object
+    return alignresult object
+}
