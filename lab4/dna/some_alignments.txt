@@ -1,0 +1,61 @@
+First I aligned the influenza sequences of the PB1 protein of the H1N1 subtype between two different avian carriers, the fowl and the chicken. I aligned these two to see whether different carriers would carry different types of the same protein in the virus. The result was surprising as the protein had mutated from carrier to carrier, perhaps to better facilitate certain methods of infection based on the ability of the carriers to move around, since the chicken has obviously less ability to travel than a fowl. 
+
+I then compared the sequences of the swine in Nigeria vs the swine in Ghana for the sequences of the M1 protein to see whether geographic separation would introduce mutations. It did. The differences in the climate between the two countries could have facilitated a different infection mechanism which would account for a differences in the protein.
+
+
+
+    program output
+
+Calling DNA align on strings , a
+ 
+a
+t
+Score for this alignment: -5
+
+Calling DNA align on strings b, 
+b
+ 
+s
+Score for this alignment: -5
+
+Calling DNA align on strings a, a
+a
+a
+|
+Score for this alignment: 2
+
+Calling DNA align on strings b, a
+b
+a
+*
+Score for this alignment: -1
+
+Calling DNA align on strings b, ba
+b 
+ba
+|t
+Score for this alignment: -3
+
+Calling DNA align on strings ab, ba
+ab
+ba
+**
+Score for this alignment: -2
+
+Calling DNA align on strings ab, b
+ab
+ b
+s|
+Score for this alignment: -3
+
+Calling DNA align on strings GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGGGTTCGAGATCAACGTGGGAATGTGCTATTGTCTCCCGAAGAGGTTAGCGAAACGCAGGGAACAG, GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGAGTTCGAGATCAGCGTGGAAATGTAATCCTGTCTCCTGAAGAGGTTAGCGAAACGCAGGGAACAG
+GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGGGTTCGAGATCAACGTGGGAATGTGCTATTGTCTCCCGAAGAGGTTAGCGAAACGCAGGGAACAG
+GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGAGTTCGAGATCAGCGTGGAAATGTAATCCTGTCTCCTGAAGAGGTTAGCGAAACGCAGGGAACAG
+|||||||||||||||||||||||||||||||||||*|||||||||||*|||||*|||||**|**|||||||*||||||||||||||||||||||||||||
+Score for this alignment: 176
+
+Calling DNA align on strings TATGAGTCTTTTAACCGAGGTCGAAACGTACGTTCTTTCTATCATTCCGTCAGGCCCCCTCAAAGCCGAGATCGCGCAGAGACTGGAAAGTGTATTTGCAGGAAAGAACACAGATCTTGAGGCTCTCATGGAATGGCTAAAGACAAGACCAATCTTGTCACCTCTGACTAAGGGAATTTTAGGATTTGTGTTCACGCTCACCGTGCCCAGTGAGCGAGGACTGCAGCGTAGACGTTTTGTCCAG, TATATGAGTCTTCTAACCGAGGTCGAAACGTTCGTTCTTTCTATCATACCGTCAGGCCCCCTCAAAGCCGAGATCGCGCAGAGACTGGAAAGTGTCTTTGCAGGAAAGAACACAGATCTTGAGGCTCTCATGGAATGGCTAAAGACAAGACCAATCTTGTCACCTCTGACTAAGGGAATTTTAGGATTTGTGTTCCCGCTCACCGTGCCCAGTGAACGAGGACTGCAGCGTAGACGTTTTGTCCAAAA
+  TATGAGTCTTTTAACCGAGGTCGAAACGTACGTTCTTTCTATCATTCCGTCAGGCCCCCTCAAAGCCGAGATCGCGCAGAGACTGGAAAGTGTATTTGCAGGAAAGAACACAGATCTTGAGGCTCTCATGGAATGGCTAAAGACAAGACCAATCTTGTCACCTCTGACTAAGGGAATTTTAGGATTTGTGTTCACGCTCACCGTGCCCAGTGAGCGAGGACTGCAGCGTAGACGTTTTGTCC  AG
+TATATGAGTCTTCTAACCGAGGTCGAAACGTTCGTTCTTTCTATCATACCGTCAGGCCCCCTCAAAGCCGAGATCGCGCAGAGACTGGAAAGTGTCTTTGCAGGAAAGAACACAGATCTTGAGGCTCTCATGGAATGGCTAAAGACAAGACCAATCTTGTCACCTCTGACTAAGGGAATTTTAGGATTTGTGTTCCCGCTCACCGTGCCCAGTGAACGAGGACTGCAGCGTAGACGTTTTGTCCAAAA
+tt||||||||||*||||||||||||||||||*|||||||||||||||*|||||||||||||||||||||||||||||||||||||||||||||||*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*|||||||||||||||||||*||||||||||||||||||||||||||||tt|*
+Score for this alignment: 447

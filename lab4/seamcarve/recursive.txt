@@ -1,0 +1,28 @@
+Answer the following analysis questions in a file seamcarve/recursive.txt.
+______________________________________________________________________________________________________________________
+What part of the above algorithm uses dynamic programming?
+/**
+ * 
+ */
+The seam-finding algorithm can be implemented recursively, without dynamic programming. Explain how.
+/**
+ * 
+ */
+For an NxN image, what is the complexity of the recursive algorithm without dynamic programming? State the complexity in big-O notation, as a function of N.
+/**
+ * [Hint description]
+ * @type {[type]}
+ */
+Using the recursive algorithm without dynamic programming, how long would it take to find a seam on a 50x50 image if 1 billion computations were made per second? State a reasonable lower bound. Hint: The answer should be huge.
+/**
+ * 
+ */
+
+For an NxN image, what is the complexity of the algorithm using dynamic programming?
+/**
+ * 
+ */
+Using the dynamic programming algorithm, how long would it take to find a seam on the same image as before (#4)?
+/**
+ * 
+ */
