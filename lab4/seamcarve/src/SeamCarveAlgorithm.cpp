@@ -24,7 +24,7 @@
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT                    
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -32,8 +32,47 @@
  */
 
 #include "SeamCarveApp.hpp"
+#include<iostream>                                                                                                                                                                                                                                                                                                                                                                                                    
 
 #define min(x, y)           ((x) < (y) ? (x) : (y))
+
+
+
+void getSeam(unsigned int **costmatrix, int w, int h, unsigned int* seam, int level, int col){
+    if(level == 0){
+        seam[h - 1 - level] = col;
+    }else{
+        seam[h - 1 - level] = col;
+        if(col != 0 && col != w - 1){
+            int curcolindex = -1;
+            unsigned int curcolval = costmatrix[col + curcolindex][level - 1];
+            if(costmatrix[col][level - 1] < curcolval){
+                curcolindex = 0;
+                curcolval = costmatrix[col][level - 1];
+            }
+            if(costmatrix[col + 1][level - 1] < curcolval){
+                curcolindex = 1;
+            }
+            getSeam(costmatrix, w,h,seam,level - 1, col + curcolindex);
+        }else if(col == 0){
+            int curcolindex = 0;
+            unsigned int curcolval = costmatrix[col + curcolindex][level - 1];
+            if(costmatrix[col + 1][level - 1] < curcolval){
+                curcolindex = 1;
+            }
+            getSeam(costmatrix, w,h,seam,level - 1, col + curcolindex);
+
+        }else if(col == (w-1)){
+            int curcolindex = -1;
+            unsigned int curcolval = costmatrix[col + curcolindex][level - 1];
+            if(costmatrix[col][level - 1] < curcolval){
+                curcolindex = 0;
+            }
+            getSeam(costmatrix, w,h,seam,level - 1, col + curcolindex);
+        }         
+    }
+
+}
 
 
 /**
@@ -52,15 +91,40 @@
 unsigned int *DoSeamCarve(unsigned int **smap, int w, int h)
 {
     /* TODO: Write this function! */
+    //computes costmatrix
 
-    unsigned int *seam = new unsigned int[h];
-
-    /* A very bad seam carving algorithm... */
-    for (int i = 0; i < h; i++)
-    {
-        seam[i] = 0;
+    unsigned int **costmatrix = new unsigned int*[w];
+    for(int i=0; i< w; ++i){
+        costmatrix[i] = new unsigned int[h];
     }
 
+    for(int i = 0; i < w; ++i){
+        costmatrix[i][0] = smap[i][0];
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    for(int i = 1; i < h; ++i){
+        costmatrix[0][i] = smap[0][i] + min(costmatrix[0][i - 1], costmatrix[1][i-1]);
+        for(int j = 1; j < w - 1; ++j){
+            costmatrix[j][i] = smap[j][i] + min(min(costmatrix[j][i - 1], costmatrix[j - 1][i - 1]), costmatrix[j + 1][i-1]);
+        }
+        costmatrix[w - 1][i] = smap[w-1][i] + min(costmatrix[w - 1][i - 1] ,costmatrix[w - 2][i-1]);
+    }
+    //computes seam
+    unsigned int *seam = new unsigned int[h];
+    unsigned int lowestval = costmatrix[0][h-1];
+    unsigned int lowest = 0;
+    for (int i = 0; i < w; ++i){
+        if (costmatrix[i][h-1] < lowestval){
+            lowest = i;
+        }
+    }
+    std::cout<<lowest<<std::endl;
+    getSeam(costmatrix, w, h,seam,h-1,lowest);
+
+    for(int i = 0; i < w; ++i){
+        delete[] costmatrix[i];
+    }
+    delete[] costmatrix;
+
     return seam;
-}
+} 
 

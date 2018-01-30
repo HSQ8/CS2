@@ -43,11 +43,9 @@ def Check(s, translatable):
     if(len(s) == 1):
         if s in translatable:
             return True
-        return False
     if(len(s) == 2):
         if s in translatable:
             return True
-        return False
     if(s[:2] in translatable):
         resulttwo = Check(s[2:],translatable)
     if(s[:1] in translatable):
@@ -75,3 +73,4 @@ print(CheckMapping("3010"))
 print(CheckMapping("82621231"))
 print(CheckMapping("111111111"))
 print(CheckMapping("12356896693"))
+print(CheckMapping("12356890006693"))
