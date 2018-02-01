@@ -38,6 +38,17 @@
 
 
 
+/**
+ * Getseam traverses the cost matrix to find the least costing path from the bottom
+ * recursively calls itself to traverse through the costmatrix vertically and populates the seam until
+ * we run out of levels to compute
+ * @param costmatrix cost matrix is the matrix of costs computed in the previous stem
+ * @param w          width of the cost matrix
+ * @param h          height of the cost matrix
+ * @param seam       the seam, a list of width locations through the cost matrix
+ * @param level      the current level at which we evaluate for the position of the next seam
+ * @param col        the next column that we want to set the seat to go to
+ */
 void getSeam(unsigned int **costmatrix, int w, int h, unsigned int* seam, int level, int col){
     if(level == 0){
         seam[h - 1 - level] = col;

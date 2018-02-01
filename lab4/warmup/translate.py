@@ -10,7 +10,7 @@
 
 # this algorithm works by checking whether the base case, the ends of the string, are in a format of one or two digit
 # number, if it is one of the translatable number that matches to a letter, it returns true, otherwise it returns false
-# if the string is bigger than 2, then it resursively checks whether the first 1 or first 2 numbers correspond to a letter
+# if the string is bigger than 2, then it recursively checks whether the first 1 or first 2 numbers correspond to a letter
 # mapping and if it does, then check the substring with those letters truncated as they have already been accepted. If we 
 # reach the end and find that out of all the recursive execution paths, one path , in some combination of one or two digit
 # numbers match completely to an alphabet, then we accept the string and call return True.
@@ -59,7 +59,7 @@ def CheckMapping(s):
         translatable.append(str(i))
     return Check(s,translatable)
 
-# formal testcases
+# formal test-cases
 print(CheckMapping("123"))
 print(CheckMapping("321"))
 print(CheckMapping("1000"))
@@ -68,9 +68,12 @@ print(CheckMapping("10"))
 print(CheckMapping("1010"))
 print(CheckMapping("3010"))
 
-# custome testcases
+# custom test-cases
 
-print(CheckMapping("82621231"))
-print(CheckMapping("111111111"))
-print(CheckMapping("12356896693"))
-print(CheckMapping("12356890006693"))
+print(CheckMapping("82621231")) # true
+print(CheckMapping("111111111")) # true
+print(CheckMapping("12356896693")) # true
+print(CheckMapping("12356890006693")) # false
+print(CheckMapping("1233006856661293")) # false
+print(CheckMapping("01")) # false
+print(CheckMapping("1010101010101")) # true

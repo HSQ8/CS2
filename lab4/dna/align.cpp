@@ -16,7 +16,7 @@ using namespace std;
 #define MISMATCH -1
 #define MATCHING 2
 
-
+//some tests cases that I tested
 struct align_test{
     string fowl = "GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGGGTTCGAGATCAACGTGGGAATGTGCTATTGTCTCCCGAAGAGGTTAGCGAAACGCAGGGAACAG";
     string chicken = "GAGAGAGTGGTCGTGAGTATTGACCGTTTCTTAAGAGTTCGAGATCAGCGTGGAAATGTAATCCTGTCTCCTGAAGAGGTTAGCGAAACGCAGGGAACAG";
@@ -79,6 +79,11 @@ align_result align(string s, string t, memo_type &memo) {
       TODO: calculate the highest score for an alignment of s and t
       - Base cases: s or t is empty
       - Recursive calls                                                                        
+     */
+    /**
+     * this is the base case, here we handle the casese where the two strings are either both empty,
+     * where one string is empty, and where the other string is empty. For each case, we insert spaces to make
+     * up the length difference and return the instruction with some score computed that accounts for the 
      */
     if(s.length() == 0 &&  t.length() != 0){
         return align_result(computeScore(s,t), std::string((t.length() - s.length()), 't'));

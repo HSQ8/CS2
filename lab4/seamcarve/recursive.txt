@@ -2,27 +2,31 @@ Answer the following analysis questions in a file seamcarve/recursive.txt.
 ______________________________________________________________________________________________________________________
 What part of the above algorithm uses dynamic programming?
 /**
- * 
+ * the algorithm computes the seam matrix dynamically, as we break the cost matrix computation into rows
+ * and compute on the smaller parts of the problem one at a time and saving the computation from the next level
  */
 The seam-finding algorithm can be implemented recursively, without dynamic programming. Explain how.
 /**
- * 
+ * if we don't remember the previous level for the cost matrix, then every level would have to be computed recursively all the way
+ * from the bottom for each step we want to take in the seam. This would not have dynamic programming as we don't remember the intermediate solutions
+ * for the cases that we already test.
  */
 For an NxN image, what is the complexity of the recursive algorithm without dynamic programming? State the complexity in big-O notation, as a function of N.
 /**
- * [Hint description]
- * @type {[type]}
+ * the time complexity involves, for each pixel in n pixels, we must compute 3 previous pixels per level for n levels, summing gets us N*3^n computations, do this for we get = O(N*3^N)
+ * 
  */
 Using the recursive algorithm without dynamic programming, how long would it take to find a seam on a 50x50 image if 1 billion computations were made per second? State a reasonable lower bound. Hint: The answer should be huge.
 /**
- * 
+ *  =50 *(3)^50/(1*10^9) = 3.589 * 10^16 seconds, if we assume that the function only grew exponentially(by providing a reasonable lower bound) without the linear coefficient in front, that time is still
+ * 7.17897987691852588770249 × 10^14 seconds
  */
 
 For an NxN image, what is the complexity of the algorithm using dynamic programming?
 /**
- * 
+ * since we store the value of previous computation, we get 3 computations per pixel for total of 3N^2 computations. Which, dropping the constant, gets us O(N^2)
  */
 Using the dynamic programming algorithm, how long would it take to find a seam on the same image as before (#4)?
 /**
- * 
+ * 3N^2/(1*10^9) for N = 50  solution = 7.5 * 10^(-6)
  */
