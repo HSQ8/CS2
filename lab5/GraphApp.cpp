@@ -235,7 +235,7 @@ int GraphApp::find_point(int x, int y) {
 
 /**
  * @brief Draws the points.
- */
+ */ 
 void GraphApp::draw_nodes() {
     for (uint i = 0; i < nodes.size(); i++) {
         if (i == (uint)start)

@@ -1,0 +1,43 @@
+What are the three most essential properties of a MST? Explain what each of these properties really means in terms of graphs and their properties.
+
+/**
+ * minimal -  spans all nodes using the edges with the least weights
+ * spanning - spans every node of the graph 
+ * Tree - in a tree (can be directed or undirected ) form were each child 
+ * can be reached by traversing  
+ */
+
+
+Suppose we start off only with one node in our candidate tree. For the next step, we should pick an adjacent node and its edge to add to the tree. Which should we pick? Justify your answer.
+
+/**
+ * we should pick the node with the edge of least weight. Since we want to 
+ * make sure that the tree is comprised of connections with the least weight
+ */
+
+Now we have two (or three, or N) nodes in our candidate tree. Which nodes and edges should we pick at each subsequent step, and why? How do we know when we're finished, and why? (In the literature, this method is known as Prim's algorithm.)
+
+/**
+ * pick the node that connects to the tree with the least weighted edge 
+ * because we'll only have one tree left by the end, which spans the entire
+ * graph
+ * 
+ * we finish when our all nodes of graph have been added to the visited set
+ * we chose the edge with the least weight that connects to different trees 
+ * until we get only one tree
+ */
+
+
+Before you start, pick one of the algorithms you described in the short-answer section and outline it in your choice of stepwise English, Python, or other pseudocode. You should be able to refer to this outline and translate it more-or-less directly into working code.
+
+chose Prim's algorithm
+
+start with a start point
+construct a visited list
+add start to visited list
+while(visited list doesn't not contain every node in graph)
+for all nodes in tree
+    find nearest node that connects to the tree
+    add node of least weight to tree
+    add node to visited list
+

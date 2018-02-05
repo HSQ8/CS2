@@ -17,8 +17,10 @@
 #include <list>
 #include <queue>
 #include <vector>
+#include <unordered_map>
 #include "GraphApp.hpp"
 #include "structs.hpp"
+#include <algorithm>
 
 using namespace std;
 
