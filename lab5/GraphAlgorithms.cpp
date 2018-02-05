@@ -11,6 +11,60 @@
  */
 #include "GraphAlgorithms.hpp"
 
+
+
+/**
+ * checkEdgeValidForAddition - checks whether the edge has one node in the MST and one node not on the MST, return true if true, false otherwise
+ * @param  onMST    the list of nodes currently on the MST
+ * @param  notOnMST the list of nodes not on MST and still in graph
+ * @param  i        the edge we want to check if we can add
+ * @return          a yes or no indicating whether we can add said edge
+ */
+bool checkEdgeValidForAddition(std::vector<Node*> onMST, std::vector<Node*> notOnMST,Edge* i){
+    //returns true if edge in question in a new edge that would extend the tree
+    bool aIntreebInGraph = ((find(onMST.begin(), onMST.end(), i->a) != onMST.end()) && (find(notOnMST.begin(), notOnMST.end(), i->b) != notOnMST.end()));
+    bool bIntreeaInGraph = ((find(onMST.begin(), onMST.end(), i->b) != onMST.end()) && (find(notOnMST.begin(), notOnMST.end(), i->a) != notOnMST.end()));
+    return aIntreebInGraph || bIntreeaInGraph;
+}
+
+
+/**
+ * get Edge From tree iterates through all possible edges and finds the edges that are valid to be added to the MST
+ */
+std::vector<Edge*> getEdgeFromTree(std::vector<Edge*> &v, std::vector<Node*> onMST, std::vector<Node*> notOnMST){
+    std::vector<Edge*> newvec;
+    for(auto i: v){
+        if(checkEdgeValidForAddition(onMST, notOnMST, i)){
+            newvec.push_back(i);
+        }
+    }
+    return newvec;
+}
+
+/**
+ * updateInfo updates the MST, notOnMST, and the list of edges we are considering so that we don't repeat looking through invalid edges. 
+ * this is a helper function
+ * @param edgeToAdd current edge added
+ * @param onMST     the current list of nodes on MSt
+ * @param notOnMST  the current list of nodes still not on MST and in graph
+ * @param copyEdge  the list of edges that we will consider looking through
+ */
+void updateInfo(Edge* edgeToAdd, std::vector<Node*> &onMST, std::vector<Node*> &notOnMST, std::vector<Edge*> &copyEdge){ 
+    onMST.push_back(edgeToAdd->a);
+    onMST.push_back(edgeToAdd->b);
+    auto itnotOnMST = find(notOnMST.begin(), notOnMST.end(), edgeToAdd->a);
+    if(itnotOnMST != notOnMST.end()){
+        notOnMST.erase(itnotOnMST);
+    }
+    itnotOnMST = find(notOnMST.begin(), notOnMST.end(), edgeToAdd->b);
+    if(itnotOnMST != notOnMST.end()){
+        notOnMST.erase(itnotOnMST);
+    }
+    auto edgeit =find(copyEdge.begin(), copyEdge.end(), edgeToAdd);
+    if(edgeit != copyEdge.end()){
+        copyEdge.erase(edgeit);
+    }
+}
 /**
  * TO STUDENTS: In all of the following functions, feel free to change the
  * function arguments and/or write helper functions as you see fit. Remember to
@@ -57,7 +111,7 @@
  * for all nodes in tree
  *     find nearest node that connects to the tree
  *     add node of least weight to tree
- *     add node to visited list
+ *     add node to visited list and remove from unvisited
  * 
  *
  *
@@ -82,32 +136,25 @@ void buildMSTPrim(Graph g, GraphApp *app) {
             edgeToAdd = i;
         }
     }
-    onMST.push_back(edgeToAdd->a);
-    onMST.push_back(edgeToAdd->b);
-    notOnMST.erase(find(notOnMST.begin(), notOnMST.end(), edgeToAdd->a));
-    notOnMST.erase(find(notOnMST.begin(), notOnMST.end(), edgeToAdd->b));
-    copyEdge.erase(find(copyEdge.begin(), copyEdge.end(), edgeToAdd));
+
+    updateInfo(edgeToAdd, onMST, notOnMST, copyEdge);
+    
     drawEdge(edgeToAdd->a,edgeToAdd->b, g.edges,app,true);
+    
     while(!notOnMST.empty()){
-
-        double currentEdgeWeight = copyEdge.back()->weight;
-
-        for(auto i: copyEdge){
-            bool lessWeight = i->weight < currentEdgeWeight;
-            bool aIntreebInGraph = ((find(onMST.begin(), onMST.end(), i->a) != onMST.end()) && (find(notOnMST.begin(), notOnMST.end(), i->b) != onMST.end()));
-            bool bIntreeaInGraph = ((find(onMST.begin(), onMST.end(), i->b) != onMST.end()) && (find(notOnMST.begin(), notOnMST.end(), i->a) != onMST.end()));
-            if(lessWeight && (aIntreebInGraph || bIntreeaInGraph)){
-                edgeToAdd = i;
-            }
+    auto listOfPotentialEdges = getEdgeFromTree(copyEdge, onMST, notOnMST);
+    edgeToAdd = *(listOfPotentialEdges.begin());
+    double currentWeight = edgeToAdd->weight;
+    for(auto i: listOfPotentialEdges){
+        if(i->weight < currentWeight){
+            edgeToAdd = i;
         }
+    }
     drawEdge(edgeToAdd->a,edgeToAdd->b, g.edges,app,true);
-    onMST.push_back(edgeToAdd->a);
-    onMST.push_back(edgeToAdd->b);
-    notOnMST.erase(find(notOnMST.begin(), notOnMST.end(), edgeToAdd->a));
-    notOnMST.erase(find(notOnMST.begin(), notOnMST.end(), edgeToAdd->b));
-    copyEdge.erase(find(copyEdge.begin(), copyEdge.end(), edgeToAdd));
+    updateInfo(edgeToAdd, onMST, notOnMST, copyEdge);
     }
 }
+
 
 /**
  * TODO: Implement Kruskal's Algorithm to build the MST.

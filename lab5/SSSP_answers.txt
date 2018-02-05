@@ -1,0 +1,16 @@
+First, let's start off looking just at the source node. If we're trying to minimize the path length, which neighbor does it make the most sense to investigate first?
+
+/**
+ * the neighbor with the least weight
+ */
+Now we have shortest paths to two nodes (or eventually three nodes, or eventually N nodes). Notice that, at least in the two-nodes case, both of these paths are shortest paths: one of them is trivial, and the other may be proven minimal by contradiction. If we're trying to minimize the path length to the goal - which we have not yet found using our algorithm - which node does it make the most sense to investigate at each further step? What else should we be doing at each step, if anything, to ensure that we'll end with a result that makes sense? Why does doing this end up yielding a shortest path to another node? (Does it?)
+
+/**
+ * we should update the Node's cost with its parent's cost, thus ensuring we know the actual cost of that path, we then investigate the path currently with the least cost
+ * this will ensure that we end up at the goal with the least cost since we've updated all the nodes and ensured that at every iteration we take the least cost step
+ */
+
+Suppose we've done many iterations and have now found our goal. How do we know that we're done? How can we now derive the path we want?
+/**
+ * we back trace the list of nodes and that is the path
+ */

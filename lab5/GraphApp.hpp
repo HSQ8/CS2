@@ -110,7 +110,6 @@ private:
     int start;
     int end;
     int graph;
-
     void draw_nodes();
     void draw_mst();
     void generate_nodes();

@@ -34,6 +34,11 @@ void findShortestPath(int start, int end, Graph g, GraphApp * app);
 /** Helper function to draw an edge on the graphics app given two nodes */
 void drawEdge(Node *pt1, Node *pt2, vector<Edge *> edges, GraphApp *app, 
     bool mst);
+void updateInfo(Edge* edgeToAdd, std::vector<Node*> &onMST, std::vector<Node*> &notOnMST,
+ std::vector<Edge*> &copyEdge);
+std::vector<Edge*> getEdgeFromTree(std::vector<Edge*> &v, std::vector<Node*> onMST,
+ std::vector<Node*> notOnMST);
+bool checkEdgeValidForAddition(std::vector<Node*> onMST, std::vector<Node*> notOnMST,Edge* i);
 
 /** Vector to store Nodes both on and not on MST for Prim's Algorithm */
 vector<Node *> onMST;
