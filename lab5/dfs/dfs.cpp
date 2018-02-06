@@ -61,6 +61,8 @@ int main(void)
                                     +-----+
 */ 
 // this has a cycle which breaks the find algorithm
+// to fix it, I would implement a visited list so that the dfs 
+// doesn't keep looking at the same nodes in the cycle
 
     Node* T = new Node(5, std::vector<Node*>());
     Node* F1 = new Node(3, std::vector<Node*>());

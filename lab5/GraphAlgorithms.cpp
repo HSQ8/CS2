@@ -244,6 +244,24 @@ void buildMSTKruskal(Graph g, GraphApp *app) {
  *              GraphAlgorithms.cpp
  *
  * Add your outline here
+ *     initialize all nodes with parent of nullptr and their cost to reach as infinity.
+ *     set start node cost to zero
+ *     while(not visited set is not empty){
+ *         if(current node = end){
+ *             break out of loop    
+ *         }
+ *         get the lowest costing node. 
+ *         mark said node as visited
+ *         get a list of nodes that current node can expand to
+ *         iteratively update the cost of the surrounding nodes if the cost of travel from current node + weight of edge
+ *         is less than the cost that is currently on the node we are updating. if the neighboring nodes have been updated, 
+ *         then we also set that node's parent as the current node (change from nullptr)
+ *         
+ *         
+ *     
+ *     }
+ *     at this point the in the algorithm every node of interest should have a parent. We back trace from end node and 
+ *     extract the path of least cost
  *
  *
  */
@@ -286,6 +304,13 @@ void findShortestPath(int start, int end, Graph g, GraphApp *app) {
     
 }
 
+/**
+ * doupdate is a function that updates the current list of nodes visited and not visited by giving the connecting edge of interest
+ * @param current    current node to update other nodes from
+ * @param edge       the edge of interest, the path through which a connecting node will be visited and updated cost
+ * @param visited    visited nodes list
+ * @param notVisited not visited nodes list
+ */
 void doUpdate(Node* current, Edge* edge,std::vector<Node*> &visited, std::vector<Node*> &notVisited){
     Node* toadd = edge->a;
     if(edge->a->id == current->id){  
@@ -299,7 +324,11 @@ void doUpdate(Node* current, Edge* edge,std::vector<Node*> &visited, std::vector
 }
 
 
-
+/**
+ * finds the lowest costing node in the vector of nodes and return said node to use as the next node for expansion
+ * @param  v vector of nodes that we can potentially pick from
+ * @return   return node of least cost to visit
+ */
 Node* lowestCostNode(std::vector<Node*> &v /*notVisited*/){
     Node* low = *(v.begin());
     double cost = low->getCost();
@@ -312,7 +341,13 @@ Node* lowestCostNode(std::vector<Node*> &v /*notVisited*/){
     return low;
 }
 
-std::vector<Edge*> getNeightboringNodes(Node* currNode, std::vector<Node*> visited, std::vector<Edge*> &edges){
+/**
+ * getNeighboring nodes takes a node and a visited list and a list of edges and computes the possible 
+ * expansions form the current nodes that are available based on edge connections
+ *
+ * returns a list of all possible expansions.
+ */
+vector<Edge*> getNeightboringNodes(Node* currNode, std::vector<Node*> visited, std::vector<Edge*> &edges){
     std::vector<Edge*> v;
     for(auto i: edges){
         if (i->a->id == currNode->id && (find(visited.begin(), visited.end(), i->b) == visited.end())){
