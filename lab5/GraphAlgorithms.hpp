@@ -21,6 +21,7 @@
 #include "GraphApp.hpp"
 #include "structs.hpp"
 #include <algorithm>
+#include <float.h>
 
 using namespace std;
 
@@ -39,6 +40,10 @@ void updateInfo(Edge* edgeToAdd, std::vector<Node*> &onMST, std::vector<Node*> &
 std::vector<Edge*> getEdgeFromTree(std::vector<Edge*> &v, std::vector<Node*> onMST,
  std::vector<Node*> notOnMST);
 bool checkEdgeValidForAddition(std::vector<Node*> onMST, std::vector<Node*> notOnMST,Edge* i);
+
+void doUpdate(Node* current, Edge* edge,std::vector<Node*> &visited, std::vector<Node*> &notVisited);
+Node* lowestCostNode(std::vector<Node*> &v /*notVisited*/);
+std::vector<Edge*> getNeightboringNodes(Node* currNode, std::vector<Node*> visited, std::vector<Edge*> &edges);
 
 /** Vector to store Nodes both on and not on MST for Prim's Algorithm */
 vector<Node *> onMST;

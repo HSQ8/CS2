@@ -248,7 +248,80 @@ void buildMSTKruskal(Graph g, GraphApp *app) {
  *
  */
 void findShortestPath(int start, int end, Graph g, GraphApp *app) {
-    // Write code here
+    // constructs lists
+    std::vector<Node*> visited;
+    std::vector<Node*> notVisited;
+    for(auto i: g.nodes){
+        notVisited.push_back(i);
+    }
+    //set all distances to infinity, set start to 0
+    for(auto it = notVisited.begin(); it != notVisited.end(); ++it){
+        if((*it)->id == start){
+            (*it)->setCost(0);
+        }else{
+        (*it)->setCost(DBL_MAX);
+        }
+        (*it)->setParent(nullptr);
+    }
+    Node* next;
+    while(!notVisited.empty()){
+        next= lowestCostNode(notVisited);
+        if(next->id == end){
+            break;
+        }
+        auto listToUpdate = getNeightboringNodes(next, visited, g.edges);
+        for(auto it = listToUpdate.begin(); it != listToUpdate.end(); ++it){
+            doUpdate(next, *it, visited, notVisited);
+        }
+        visited.push_back(next);
+        auto it = find(notVisited.begin(), notVisited.end(),next);
+        if(it != notVisited.end()){
+            notVisited.erase(it);
+        }
+    }
+    while(next->getParent()!= nullptr){
+        drawEdge(next, next->getParent(), g.edges, app, false);
+        next = next->getParent();
+    }
+    
+}
+
+void doUpdate(Node* current, Edge* edge,std::vector<Node*> &visited, std::vector<Node*> &notVisited){
+    Node* toadd = edge->a;
+    if(edge->a->id == current->id){  
+        toadd = edge->b;
+    }
+    if(current->getCost() + edge->weight < toadd->getCost()){
+        toadd->setCost(current->getCost() + edge->weight);
+        toadd->setParent(current);
+        
+    }
+}
+
+
+
+Node* lowestCostNode(std::vector<Node*> &v /*notVisited*/){
+    Node* low = *(v.begin());
+    double cost = low->getCost();
+    for(auto i: v){
+        if(i->getCost() < cost){
+            low = i;
+            cost = i->getCost();
+        }
+    }
+    return low;
+}
+
+std::vector<Edge*> getNeightboringNodes(Node* currNode, std::vector<Node*> visited, std::vector<Edge*> &edges){
+    std::vector<Edge*> v;
+    for(auto i: edges){
+        if (i->a->id == currNode->id && (find(visited.begin(), visited.end(), i->b) == visited.end())){
+            v.push_back(i);
+        }else if(i->b->id == currNode->id && (find(visited.begin(), visited.end(), i->a) == visited.end())){
+            v.push_back(i);
+        }
+    }
+    return v;
 }
 
 /**

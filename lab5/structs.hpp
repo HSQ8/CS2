@@ -40,6 +40,9 @@ struct Node
      */
     int id;
 
+    Node* parent;
+    double costToParent;
+
     /**
      * @brief Initializes the struct
      *
@@ -52,6 +55,18 @@ struct Node
         , y(y_)
         , id(id_)
     {}
+    void setParent(Node* _parent){
+        this->parent = _parent;
+    }
+    void setCost(double _cost){
+        this->costToParent = _cost;
+    }
+    double getCost(){
+         return this->costToParent;
+    }
+    Node* getParent(){
+        return this->parent;
+    }
 
 	/**
 	 * @brief Calculates distance from this node to another node
