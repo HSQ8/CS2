@@ -86,6 +86,9 @@ public:
     this->string = string;
     next = NULL;
   }
+  ~Node(){
+    delete this->string;
+  }
 
 };
 
@@ -100,6 +103,7 @@ protected:
   Node *head;
   // Last Node in the Queue
   Node *tail;
+  Node *permahead;
 
 public:
   /**
@@ -109,6 +113,16 @@ public:
   {
     head = NULL;
     tail = NULL;
+  }
+  ~Queue(){
+    Node* next;
+    Node* temp;
+    next = permahead;
+    while(next != nullptr){
+        temp = next;
+        next = next->next;
+        delete temp;
+    }
   }
 
 
@@ -121,6 +135,7 @@ public:
     if (head == NULL) {
       head = node;
       tail = node;
+      permahead = node;
     }
     else {
       tail->next = node;
@@ -137,7 +152,7 @@ public:
     if (head == NULL) {
       return NULL;
     }
-    Node *temp = head;
+    Node* temp = head;
     head = head->next;
     return temp->string;
   }
@@ -187,6 +202,7 @@ int main()
     count++;
     std::cout << "String #" << count << ": " << queue.pop_front() << std::endl;
   }
+
 
   return 0;
 }

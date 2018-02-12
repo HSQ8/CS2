@@ -46,7 +46,7 @@
 #include "RaytracerMultithreaded.hpp"
 
 // Number of threads to use for raytracing
-#define NTHREADS 2
+#define NTHREADS 12
 
 
 /**
@@ -81,6 +81,91 @@ RaytracerMultithreaded::~RaytracerMultithreaded()
  */
 void RaytracerMultithreaded::run()
 {
-    /* TODO: Write this function. */
+    std::vector<std::thread*> v;
+    int widthstart = 0;
+    int widthincrement = NTHREADS;
+
+    for(int i = 0; i < NTHREADS; ++i){
+        v.push_back(new std::thread(&RaytracerMultithreaded::runSection, this, widthstart, widthincrement));
+        widthstart += 1;
+    }
+
+    for(std::vector<std::thread*>::iterator it = v.begin(); it != v.end(); ++it){
+        (*it)->join();
+    }   
+
+}
+
+void RaytracerMultithreaded::runSection(int widthstart, int widthincrement){
+    Ray *init_ray = new Ray();
+    Vertex *eye;
+    Viewport *viewport = world->get_viewport();
+
+    /* The origin of the initial ray is always the viewer's eye. */
+    eye = world->get_eye();
+    init_ray->set_origin(new Vertex(eye));
+
+    int height = viewport->get_height();
+    int width = viewport->get_width();
+
+Color *col;
+Vertex *pixel;
+for (int i = widthstart; i < width; i += widthincrement)
+    {
+        for (int j = 0; j < height; j++)
+        {
+            /* The displacement of the ray is the pixel's coordinates
+             * minus the eye's coordinates. */
+            viewport->map_pixel_to_vertex(i, j, &pixel);
+            init_ray->set_displacement(new Vertex(pixel->x - eye->x,
+                pixel->y - eye->y, pixel->z - eye->z));
+            delete pixel;
+
+            /* Trace this ray. */
+            trace(init_ray, &col);
+
+            /* Color the pixel. */
+            viewport->color_pixel(i, j, col);
+            delete col;
+        }
+    }
+    delete init_ray;
+}
+
+void RaytracerMultithreaded::trace(Ray *ray, Color **color)
+{
+    unsigned int i;
+    Entity *entity = nullptr;
+    Ray *to_light, *normal;
+    Vertex *lp, *no;
+    vector<Light *> lights = world->get_light_vector();
+
+    *color = new Color(0.0, 0.0, 0.0);
+
+    if (get_closest_entity_intersection(ray, &normal, &entity))
+    {
+        /* This ray intersects an Entity, so we need to determine the
+         * color of the corresponding pixel. */
+        for (i = 0; i < lights.size(); i++)
+        {
+            lp = lights[i]->get_position();
+            no = normal->get_origin();
+
+            to_light = new Ray(new Vertex(no),
+                new Vertex(lp->x - no->x, lp->y - no->y, lp->z - no->z));
+
+            if (!light_blocked(to_light, lights[i], entity))
+            {
+                shader->shade_from_single_light(lights[i], entity, ray,
+                    to_light, normal, *color);
+            }
+
+            delete to_light;
+        }
+
+        shader->shade_ambient(entity, *color);
+
+        delete normal;
+    }
 }
 

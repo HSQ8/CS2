@@ -50,6 +50,7 @@
 #include <math.h>
 #include "RaytracerBase.hpp"
 #include <thread>
+#include <vector>
 
 using namespace std;
 
@@ -64,6 +65,9 @@ public:
     ~RaytracerMultithreaded();
 
     void run();
+    void trace(Ray *ray, Color **color);
+private:
+    void runSection(int widthstart, int widthincrement);
 };
 
 #endif

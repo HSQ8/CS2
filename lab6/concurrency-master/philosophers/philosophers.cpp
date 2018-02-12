@@ -134,7 +134,8 @@ public:
      */
     void pick_up()
     {
-
+        //m.try_lock();
+        m.lock();
     }
 
     /**
@@ -144,7 +145,7 @@ public:
      */
     void release()
     {
-
+        m.unlock();
     }
 
     /**
@@ -173,6 +174,7 @@ private:
      * @brief Describes the current state of the fork.
      */
     bool dirty;
+    std::mutex m;
 };
 
 
@@ -294,10 +296,21 @@ void greedy(Philosopher *phil)
 /**
  * @attention Student-implemented function
  */
-void waiter(Philosopher *p)
+void waiter(Philosopher *phil, Semaphore *table)
 {
-    // TODO Fill in this function with your waiter solution to the dining
-    //      philosophers problem.
+    while(true){
+        table->dec();
+        phil->pickup_fork(LEFT);
+        phil->pickup_fork(RIGHT);
+
+        phil->eat();
+
+        phil->release_fork(RIGHT);
+        phil->release_fork(LEFT);
+        table->inc();
+
+    }
+
 }
 
 
@@ -316,6 +329,7 @@ void talking(Philosopher *p)
  * forks, indicating which forks are taken and which philosophers are
  * eating.
  */
+
 void update_ascii_display()
 {
     while (true)
@@ -414,12 +428,13 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "-w") == 0)
         {
+            Semaphore* table = new Semaphore(4);
             /* Waiter solution. */
             for (int i = 0; i < NUMPHILS; i++)
             {
                 int j = (i + 1) % NUMPHILS;
                 phils[i] = new Philosopher(&forks[i], &forks[j], i);
-                t[i] = new std::thread(waiter, phils[i]);
+                t[i] = new std::thread(waiter, phils[i], table);
             }
         }
         else if (strcmp(argv[1], "-t") == 0)
