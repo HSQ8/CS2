@@ -46,6 +46,8 @@ either expressed or implied, of the California Institute of Technology.
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <time.h>
+#include <ctime>
 
 #include "error.hpp"
 #include "NetworkWrapper.hpp"
@@ -53,3 +55,6 @@ either expressed or implied, of the California Institute of Technology.
 /* TODO: declare any extra classes here */
 
 #endif
+std::string* Receive(CS2Net::Socket& sock);
+void Connect(std::string &hostname, uint16_t port, CS2Net::Socket& sock);
+void Send(std::string &to_send, CS2Net::Socket& sock);

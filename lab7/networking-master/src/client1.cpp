@@ -47,16 +47,103 @@ int main(int argc, char ** argv)
 
     REQUIRE(argc == 3, "usage: %s hostname port", argv[0]);
 
-    /* TODO: write this code.
-    *
-    * This should be a client that connects to a remote server,
-    * sends a message of your choice no more than once per second,
-    * and echoes any messages it receives in the meantime
-    * without having to block on recv.
-    *
-    **/
+    CS2Net::Socket sock;
+    std::string hostname(argv[1]);
+    std::string to_send;
+    int counter = 0;
+    uint16_t port = std::stoi(argv[2]);
+    Connect(hostname, port, sock);
+    std::time_t start = std::time(nullptr);
+    std::vector<CS2Net::PollFD> poll_vec(1);
+    poll_vec[0].sock = &sock;
+    
+
+    while(true){
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        to_send = std::to_string(counter);
+        poll_vec[0].SetRead(true);
+        int poll_err = CS2Net::Poll(&poll_vec, 10);
+        REQUIRE(poll_err >= 0, "error on poll!?");
+
+        if(poll_vec[0].HasHangup() || poll_vec[0].HasError()){
+            Connect(hostname, port, sock);
+        }
+        if(poll_vec[0].CanRead()){
+            auto ReceivedPtr = Receive(sock);
+            if(ReceivedPtr != nullptr){
+                std::cout<<"message received from " << hostname << " is " << std::endl << "*****"<< std::endl << *ReceivedPtr << std::endl;
+            }else{
+                std::cout <<"no message received"<<std::endl;
+            }
+        }
+
+        if((int)std::difftime(std::time(nullptr), start) > 1){
+            counter++;
+
+            Send(to_send, sock);
+            start = std::time(nullptr);
+
+        }
+    }
 
     return 0;
 
 
+}
+
+void Send(std::string &to_send, CS2Net::Socket& sock){
+    int ret = sock.Send(&to_send);
+    if(ret < 0){
+    // bad stuff happened
+        if(ret == -1){
+            ERROR("send error: %s", strerror(errno));
+        }
+        else{
+            ERROR("this error should never occur");
+        }
+    } 
+    else{
+    // we sent some data yay
+        std::cout<<"message sent" <<std::endl;
+    }
+}
+
+void Connect(std::string &hostname, uint16_t port, CS2Net::Socket& sock){
+    int ret = sock.Connect(&hostname, port);
+    if(ret < 0){
+    // something terrifying happened x_X
+        if(ret == -1)
+        {
+            ERROR("connect error: %s", strerror(errno));
+        }
+        else if(ret == -3)
+        {
+            ERROR("connect error: %s", gai_strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
+    }
+    else{
+    // we connected yay
+        std::cout<<"connection established"<<std::endl;
+    }
+
+}
+std::string* Receive(CS2Net::Socket& sock){
+    std::string * incoming = sock.Recv(1024, false);
+    if(incoming == NULL)
+    {
+    // bad stuff happened
+        ERROR("recv error: %s", strerror(errno));
+    }
+    else
+    {
+    // we got some data yay
+        std::cout<<"message received"<<std::endl;
+        return incoming;
+    }
+    return nullptr;
 }

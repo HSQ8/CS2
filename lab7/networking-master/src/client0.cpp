@@ -43,6 +43,8 @@ either expressed or implied, of the California Institute of Technology.
 int main(int argc, char ** argv)
 {
 
+
+
     REQUIRE(argc == 3, "usage: %s hostname port", argv[0]);
 
     /* TODO: write this code.
@@ -53,7 +55,75 @@ int main(int argc, char ** argv)
      * and disconnects.
      *
      **/
+    CS2Net::Socket sock;
+    std::string hostname(argv[1]);
+    std::string to_send("test message to Caltech CMS server from Ruddock");
+    uint16_t port = std::stoi(argv[2]);
+    Connect(hostname, port, sock);
+    Send(to_send, sock);
+    auto ReceivedPtr = Receive(sock);
+    if(ReceivedPtr != nullptr){
+        std::cout<<"message received from " << hostname << " is " << std::endl << "*****"<< std::endl << *ReceivedPtr << std::endl;
+    }else{
+        std::cout <<"no message received"<<std::endl;
+    }
 
     return 0;
 
 }
+
+void Send(std::string &to_send, CS2Net::Socket& sock){
+    int ret = sock.Send(&to_send);
+    if(ret < 0){
+    // bad stuff happened
+        if(ret == -1){
+            ERROR("send error: %s", strerror(errno));
+        }
+        else{
+            ERROR("this error should never occur");
+        }
+    }
+    else{
+    // we sent some data yay
+        std::cout<<"message sent" <<std::endl;
+    }
+}
+
+void Connect(std::string &hostname, uint16_t port, CS2Net::Socket& sock){
+    int ret = sock.Connect(&hostname, port);
+    if(ret < 0){
+    // something terrifying happened x_X
+        if(ret == -1)
+        {
+            ERROR("connect error: %s", strerror(errno));
+        }
+        else if(ret == -3)
+        {
+            ERROR("connect error: %s", gai_strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
+    }
+    else{
+    // we connected yay
+        std::cout<<"connection established"<<std::endl;
+    }
+
+}
+std::string* Receive(CS2Net::Socket& sock){
+    std::string * incoming = sock.Recv(1024, false);
+    if(incoming == NULL)
+    {
+    // bad stuff happened
+        ERROR("recv error: %s", strerror(errno));
+    }
+    else
+    {
+    // we got some data yay
+        std::cout<<"message received"<<std::endl;
+        return incoming;
+    }
+    return nullptr;
+} 
