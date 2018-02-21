@@ -39,6 +39,7 @@ either expressed or implied, of the California Institute of Technology.
 */
 
 #include "client2.hpp"
+#include <iostream>
 
 // static function forward declarations
 static gboolean PollSocket(gpointer);
@@ -74,6 +75,7 @@ static bool is_autoscroll;
 static bool connected;
 
 static CS2Net::Socket * sock;
+std::vector<CS2Net::PollFD> poll_vec(1);
 
 // Callbacks galore!
 
@@ -93,6 +95,80 @@ static CS2Net::Socket * sock;
  *
  * @return 0 on success. -1 on error.
  */
+
+std::string getPayload(std::string* strptr){
+    return strptr->substr(3);
+}
+void Send(std::string& to_send, CS2Net::Socket* sock){
+    int ret = sock->Send(&to_send);
+    if(ret < 0){
+        if(ret == -1){
+            ERROR("send error: %s", strerror(errno));
+        }
+        else{
+            ERROR("this error should never occur");
+        }
+    }
+    else{
+        std::cout<<"message sent" <<std::endl;
+    }
+}
+
+void Connect(std::string &hostname, uint16_t port, CS2Net::Socket* sock){
+    int ret = sock->Connect(&hostname, port);
+    if(ret < 0){
+        if(ret == -1)
+        {
+            ERROR("connect error: %s", strerror(errno));
+        }
+        else if(ret == -3)
+        {
+            ERROR("connect error: %s", gai_strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
+    }
+    else{
+        std::cout<<"connection established"<<std::endl;
+    }
+
+}
+std::string* Receive(CS2Net::Socket* sock){
+    std::string * incoming = sock->Recv(1024, false);
+    if(incoming == NULL)
+    {
+    // bad stuff happened
+        ERROR("recv error: %s", strerror(errno));
+    }
+    else
+    {
+    // we got some data yay
+        std::cout<<"message received"<<std::endl;
+        return incoming;
+    }
+    return nullptr;
+}
+
+void Disconnect(CS2Net::Socket* sock){
+    int ret = sock->Disconnect();
+if(ret < 0)
+{
+    // bad stuff happened
+    if(ret == -1)
+    {
+        // you might actually be able to ignore these errors
+        // but we'll print them anyway
+        ERROR("disconnect error: %s", strerror(errno));
+    }
+    else
+    {
+        ERROR("this error should never occur");
+    }
+}
+}
+
 static int DoConnect(const char * hostname, uint16_t port, const char * username)
 {
     std::string __hostname(hostname);
@@ -100,13 +176,38 @@ static int DoConnect(const char * hostname, uint16_t port, const char * username
     guint ctx = gtk_statusbar_get_context_id(status_bar, "none");
     char status_str[1024];
 
+    Connect(__hostname, port, sock);
+    SendMessage(MSG_AUTH_USERNAME, &__username);
+    std::string* ReceivedPtr = Receive(sock);
+    if(ReceivedPtr != nullptr){
+        if((*ReceivedPtr)[0] == MSG_AUTH_OK){
+            connected = true;
+        }else if((*ReceivedPtr)[0] == MSG_AUTH_ERROR){
+            Disconnect(sock);
+            return -1;
+        }
+    }else{
+        std::cout <<"no message received"<<std::endl;
+        Disconnect(sock);
+        return -1;
+    }
+
+    poll_vec[0].sock = sock;
+    poll_vec[0].SetRead(true);
+
+
+
+
+
+
+
     /* TODO: Fix this function and make it useful. */
 
     snprintf(status_str, 1024, "Connecting not implemented");
     gtk_statusbar_pop(status_bar, ctx);
     gtk_statusbar_push(status_bar, ctx, status_str);
 
-    return -1;
+    return 0;
 }
 
 /**
@@ -136,9 +237,36 @@ static void DoDisconnect()
  */
 static gboolean PollSocket(gpointer data)
 {
-    /* TODO: Fix this function so it does something useful. */
+    int poll_err = CS2Net::Poll(&poll_vec, 10);
+    REQUIRE(poll_err >= 0, "error on poll!?");
+    if(poll_vec[0].HasHangup() || poll_vec[0].HasError()){
     return false;
+    }
+    std::string* ReceivedPtr = Receive(sock);
+    if(ReceivedPtr != nullptr){
+        if((*ReceivedPtr)[0] == MSG_SERVER_MESSAGE){
+            auto payload = getPayload(ReceivedPtr);
+            AddLineToBuffer((gpointer)(&payload));
+            
+        }else if((*ReceivedPtr)[0] == MSG_CHATMSG){
+            auto payload = getPayload(ReceivedPtr);
+            AddLineToBuffer((gpointer)(&payload));
+            
+        }else if((*ReceivedPtr)[0] == MSG_USERLIST){
+            SetUserList();
+
+        }else if((*ReceivedPtr)[0] == MSG_GENERAL_ERROR){
+            auto payload = getPayload(ReceivedPtr);
+            AddLineToBuffer((gpointer)(&payload));
+
+        }
+    }else{
+        //failed to receive
+    }
+    return true;
 }
+
+
 
 /**
  * @brief Sends a message to the remote server.
@@ -159,9 +287,9 @@ static gboolean PollSocket(gpointer data)
  */
 static int SendMessage(MESSAGE_TYPE type, std::string * payload)
 {
-    /* TODO: make this function useful. */
-    ERROR("sending messages is not implemented yet");
-    return -2;
+    auto s = EncodeNetworkMessage(type,payload);
+    Send(s,sock);
+    return payload->size() + 3;
 }
 
 /**
@@ -184,6 +312,8 @@ static void ProcessChatLine(GtkWidget * w, gpointer data)
      * Just create a MSG_CHATMSG message and send it over
      * the open socket.
      */
+    auto s = std::to_string(*txt);
+    SendMessage(MSG_CHATMSG, &s);
 
     // The default behavior (for demonstration) is to print the chat line to the
     // chat buffer exactly as entered.

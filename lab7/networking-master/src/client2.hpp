@@ -66,10 +66,12 @@ either expressed or implied, of the California Institute of Technology.
  * @attention This function is student-implemented.
  * @return string The encoded network message to send over the network.
  */
-std::string EncodeNetworkMessage(MESSAGE_TYPE type, std::string * payload)
-{
-    // TODO: fix this.
-    return std::string();
+std::string EncodeNetworkMessage(MESSAGE_TYPE type, std::string * payload){   
+    int size = payload->size();
+    std::string s = "aaa";
+    s[0] = (unsigned char)type;
+    s[1] = (unsigned char)(size % 256);
+    s[2] = (unsigned char)((size / 256) % 256);
+    return s + *payload;
 }
-
 #endif
