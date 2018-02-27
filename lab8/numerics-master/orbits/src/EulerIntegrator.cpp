@@ -45,6 +45,13 @@
 
 #include "EulerIntegrator.hpp"
 
+float EulerIntegrator::get_x_acceleration(double *x, double *y){
+    return (*x)*(-1.0) / std::pow(((*x)*(*x) + (*y)*(*y)), 3.0/2.0);
+}
+float EulerIntegrator::get_y_acceleration(double *x, double *y){
+    return (*y)*(-1.0) / std::pow(((*x)*(*x) + (*y)*(*y)), 3.0/2.0);
+}
+
 
 /**
  * @brief Solve a differential equation with the forward Euler method.
@@ -62,7 +69,12 @@
 void EulerIntegrator::forward_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+    double curx = *x;
+    double cury = *y;
+    *x += h * (*vx);
+    *y += h * (*vy);
+    *vx += h* get_x_acceleration(&curx, &cury);
+    *vy += h* get_y_acceleration(&curx, &cury);
 }
 
 
@@ -82,7 +94,11 @@ void EulerIntegrator::forward_euler(double *x, double *y, double *vx,
 void EulerIntegrator::backward_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+
+    *x = ((*x) + h *(*vx))/(1.0+h*h);
+    *y = ((*y) + h *(*vy))/(1.0+h*h);
+    *vx = *vx + h*(get_x_acceleration(x,y));
+    *vy = *vy + h*(get_y_acceleration(x,y));
 }
 
 
@@ -102,5 +118,10 @@ void EulerIntegrator::backward_euler(double *x, double *y, double *vx,
 void EulerIntegrator::symplectic_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+    double curx = *x;
+    double cury = *y;
+    *vx += h* get_x_acceleration(&curx, &cury);
+    *vy += h* get_y_acceleration(&curx, &cury);
+    *x += h * (*vx);
+    *y += h * (*vy);
 }

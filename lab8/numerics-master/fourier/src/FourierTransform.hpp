@@ -47,6 +47,7 @@
 #define __FOURIERTRANSFORM__
 
 #include "ComplexNumber.hpp"
+#include <iostream>
 
 /**
  * @brief Change this macro from "slow_transform" to "fast_transform"
@@ -69,6 +70,8 @@ namespace FourierTransform
     ComplexNumber *transform(double *input, int n, int m);
     ComplexNumber *inverseTransform(ComplexNumber *input, int n);
     ComplexNumber *inverseTransform(ComplexNumber *intput, int n, int m);
+    ComplexNumber complexPow(ComplexNumber i, int n);
+    ComplexNumber *fast_transform_recurse(ComplexNumber *input, ComplexNumber w ,int n);
 }
 
 #endif

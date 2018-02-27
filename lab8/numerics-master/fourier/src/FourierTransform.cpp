@@ -47,6 +47,13 @@
 
 #define ndx(obj,i,j,n)      (obj[(i)+(j)*n])
 
+ComplexNumber FourierTransform::complexPow(ComplexNumber i, int n){
+    ComplexNumber temp = ComplexNumber::fromReal(1);
+    for(int j = 0; j< n;++j){
+        temp = temp * i;
+    }
+    return temp;
+}
 
 /**
  * @brief Computes the discrete Fourier transform of the input data using
@@ -64,7 +71,12 @@
 ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
 {
     ComplexNumber *output = new ComplexNumber[n];
-    
+    for(int i = 0; i < n; ++i ){
+        output[i] = ComplexNumber(0,0);
+        for(int j = 0; j < n; ++j){
+            output[i] = output[i] + input[j] * ComplexNumber::getRootOfUnity(n,-i*j);
+        }
+    }
     return output;
 }
 
@@ -84,9 +96,36 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
  */
 ComplexNumber *FourierTransform::fast_transform(ComplexNumber *input, int n)
 {
-    ComplexNumber *output = new ComplexNumber[n];
-    
-    return output;
+    auto result = fast_transform_recurse(input, input[0].getRootOfUnity(n,1),n);
+    return result;
+}
+
+
+ComplexNumber *FourierTransform::fast_transform_recurse(ComplexNumber *input, ComplexNumber w ,int n){
+ 
+
+    if(n == 1){
+        return input;
+    }
+    ComplexNumber *evenslist = new ComplexNumber[n/2];
+    ComplexNumber *oddslist = new ComplexNumber[n/2];
+    for(int i = 0; i < n; ++i){
+        if(i % 2 == 0){
+            evenslist[i/2] = input[i];
+        }else if(i % 2== 1){
+            oddslist[(i-1)/2] = input[i];
+        }
+    }
+    auto evens = fast_transform_recurse(evenslist, w*w, n/2);
+    auto odds = fast_transform_recurse(oddslist, w*w, n/2);
+    auto x = ComplexNumber::fromReal(1);
+    for(int i = 0, k = n/2-1; i<k; ++i){
+        input[i] = evens[i] + x*odds[i];
+        input[i+n/2] = evens[i] - x*odds[i];
+        x = x * w;        
+    }
+    return input;
+
 }
 
 

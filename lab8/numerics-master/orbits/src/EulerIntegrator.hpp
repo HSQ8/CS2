@@ -51,6 +51,8 @@
  */
 namespace EulerIntegrator
 {
+    float get_x_acceleration(double *x, double *y);
+    float get_y_acceleration(double *x, double *y);
     void forward_euler(double *x, double *y, double *vx, double *vy,
         double h);
     void backward_euler(double *x, double *y, double *vx, double *vy,

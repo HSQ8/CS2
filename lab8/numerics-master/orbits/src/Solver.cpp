@@ -51,6 +51,9 @@
 using namespace std;
 
 
+bool Solver::sameSign(double x, double y){
+    return (x < 0.0 && y < 0.0) || (x >=0.0 && y>= 0.0);
+}
 /**
  * @brief Solves f(x) = 0 in the interval [x1, x2] with the bisection
  * method
@@ -64,7 +67,16 @@ using namespace std;
  * @return The x-coordinate of the root
  */
 double Solver::bisection(double (*f)(double), double x1, double x2)
-{
+{ 
+    double mid = x1;
+    while(f(x1) > PRECISION || f(x1) < -PRECISION){
+        mid = x2 - (x2 - x1) / 2.0;
+        if(sameSign(f(mid), f(x1))){
+            x1 = mid;
+        }else if(sameSign(f(mid), f(x2))){
+            x2 = mid;
+        }
+    }
     return x1;
 }
 
@@ -83,5 +95,8 @@ double Solver::bisection(double (*f)(double), double x1, double x2)
 double Solver::newton_raphson(double (*f)(double), double (*fp)(double),
     double x1)
 {
+    while(f(x1) > TOLERANCE || f(x1) < -TOLERANCE){
+        x1 = x1 - f(x1)/fp(x1);
+    }
     return x1;
 }

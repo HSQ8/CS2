@@ -67,6 +67,31 @@ float naive_sum(vector<float> vec)
 // TODO: Implement stable summation here, test it in main() below, and
 // show how much better a job you can do than a simple sum operation!
 
+float kahan_sum(vector<float> vec){
+    float sum = 0.0;
+    float compensate = 0.0;
+    for (unsigned int i = 0; i < vec.size(); i++){
+        float y = vec[i] - compensate;
+        float t = sum + y;
+        compensate = (t - sum) - y;
+        sum = t;
+    }
+    return sum;
+}
+
+float pairwise_sum(std::vector<float> vec, float cutoff){
+    if (vec.size() < cutoff){
+        float sum = 0.0;
+        for (unsigned int i = 0; i < vec.size(); i++)
+        sum += vec[i];
+        return sum;
+    }else{
+        long int mid = vec.size() / 2;
+        std::vector<float> first(vec.begin(), vec.begin() + mid);
+        std::vector<float> second(vec.begin() + mid, vec.end());
+        return pairwise_sum(first, cutoff) + pairwise_sum(second, cutoff);
+    }
+}
 
 int main()
 {
@@ -79,4 +104,6 @@ int main()
 
 	// Try out our summation algorithms!
 	cout << "Result of naive summation: " << naive_sum(vec) << endl;
+    cout << "Result of kahan summation: " << kahan_sum(vec) << endl;
+    cout << "Result of pairwise summation: " << pairwise_sum(vec, 40.0) << endl;
 }

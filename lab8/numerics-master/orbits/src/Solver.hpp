@@ -44,6 +44,7 @@
  */
 
 #include <cmath>
+#include <iostream>
 
 
 /**
@@ -51,6 +52,7 @@
  */
 namespace Solver
 {
+    bool sameSign(double x, double y);
     double bisection(double (*f)(double), double x1, double x2);
     double newton_raphson(double (*f)(double), double (*fp)(double),
         double x0);

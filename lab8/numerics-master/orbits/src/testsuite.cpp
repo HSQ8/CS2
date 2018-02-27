@@ -48,10 +48,39 @@
 
 using namespace Solver;
 
+double f1(double x){
+    return x*x*x - x + 1.0;
+}
+double f1prime(double x){
+    return 3*x*x - 1.0;
+}
+
+double f2(double x){
+    return x*x*x*x*x - x*x*x*x + 3*x*x*x - 6.0;
+}
+double f2prime(double x){
+    return 5*x*x*x*x - 4*x*x*x + 9*x*x;
+}
+
 
 int main()
 {
-    /* Do your testing here. */
-    
+    double (*f1ptr)(double);
+    double (*f1PrimePtr)(double);
+    f1ptr = &f1;
+    f1PrimePtr = &f1prime;
+
+    double (*f2ptr)(double);
+    double (*f2PrimePtr)(double);
+    f2ptr = &f2;
+    f2PrimePtr = &f2prime;
+
+    std::cout << "x*x*x - x + 1.0 , root should be  -1.324718" << std::endl;
+    std::cout << "bisection method " << bisection(f1ptr,-5.0, 5.0) << std::endl; // should be -1.324718
+    std::cout << "newton raphson method " << newton_raphson(f1ptr, f1PrimePtr, 10) << std::endl; // should -1.324718
+
+    std::cout << "x*x*x*x*x - x*x*x*x + 3*x*x*x - 6.0 , root should be  1.2237652" << std::endl;
+    std::cout << "bisection method " << bisection(f2ptr,-5.0, 5.0) << std::endl; // should  be 1.2237652
+    std::cout << "newton raphson method " << newton_raphson(f2ptr, f2PrimePtr, 10) << std::endl; // should  be 1.2237652
     return 0;
 }
